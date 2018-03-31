@@ -1,27 +1,49 @@
 <html>
     <head>
+        <style>
+            .landmark {
+                height: 50px;
+                width: 50px;
+                border-radius: 25px;
+                position: absolute;
+                background-color: green;
+            }
+        </style>
+
     </head>
     <body>
         <p id="out">Compass Orientation: not detected yet</p>
         <p id="compass_heading">Compass Heading: not detected yet</p>
     <script>
-            if(window.DeviceOrientationEvent){
-                window.addEventListener("deviceorientation", orientation, false);
-            }else{
-                console.log("DeviceOrientationEvent is not supported");
-            }
-        function orientation(event){
-            console.log("Magnetometer: "
-                        + event.alpha + ", "
-                        + event.beta + ", "
-                        + event.gamma
-                        );
-                        var out = document.getElementById("out");
-                        var compass_heading = document.getElementById("compass_heading");
-                        out.innerHTML = "Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma;
-                        compass_heading.innerHTML = "Compass Heading: " + compassHeading(event.alpha, event.gamma, event.beta);
-        }
         var degtorad = Math.PI / 180; // Degree-to-Radian conversion
+        var compass_heading = 0;
+        var landmarks = [];
+
+        var landmark = document.createElement("div");
+        landmark.classList.add("landmark");
+        document.body.appendChild(landmark);
+
+        var quad = {'lat':38.92228350000001, 'long':-77.01806210000001, 'html_element':landmark};
+        var mapbox = {'lat':38.8997503, 'long':-77.03383489999999};
+        var you = mapbox;
+        landmarks.push(quad);
+
+        if(window.DeviceOrientationEvent){
+            window.addEventListener("deviceorientation", orientation, false);
+        }else{
+            console.log("DeviceOrientationEvent is not supported");
+        }
+
+        function orientation(event){
+            console.log("Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma);
+            var out = document.getElementById("out");
+            out.innerHTML = "Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma;
+            document.getElementById("compass_heading").innerHTML = "Compass Heading: " + compassHeading(event.alpha, event.gamma, event.beta);
+            compass_heading = compassHeading(event.alpha, event.gamma, event.beta);
+            landmarks.forEach(function(landmark){
+                landmark.html_element.style.right = screen.width * getRatio(you, landmark, compass_heading) + 'px';
+            });
+        }
         
         function compassHeading( alpha, beta, gamma ) {
             
@@ -50,10 +72,26 @@
                 compassHeading += 2 * Math.PI;
             }
             
-            return compassHeading * ( 180 / Math.PI ); // Compass Heading (in degrees)
-            
+            compass_heading = compassHeading;
+            return compassHeading; //in radians :) * ( 180 / Math.PI ); // Compass Heading (in degrees)
+        }
+
+
+        function getRatio(you, landmark, compass_heading){
+            you.x = you.long;
+            you.y = you.lat;
+            landmark.x = landmark.long;
+            landmark.y = landmark.lat;
+            var x = you.x - landmark.x;
+            var y = you.y - landmark.y;
+            var r = Math.sqrt(x*x+y*y);
+            var t = Math.atan(y/x);
+            var dt = compass_heading - Math.atan(y/x);
+            var b = r * Math.cos(t);
+            var a = r * Math.sin(t);
+            var ratio = (b / Math.sqrt(3) - a) / (2*b/Math.sqrt(3));
+            return ratio;
         }
         </script>
     </body>
 </html>
-
