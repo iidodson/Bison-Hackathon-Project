@@ -24,54 +24,118 @@
   <!--BODY------>
   <body>
     <div id="map"></div>
+    <h3>Results:</h3>
+    <div id="results"></div>
     <script>
       var map;
-      var infowindow;
+      var panorama;
+      var marker;
 
       function initMap() {
-        var pyrmont = {lat: -33.867, lng: 151.195};
+        var pyrmont = {lat: 38.8879282, lng: -77.02526539999997};
 
         map = new google.maps.Map(document.getElementById('map'), {
           center: pyrmont,
-          zoom: 15
+          zoom: 15,
+          streetViewControl: true
         });
 
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-          location: pyrmont,
-          radius: 500,
-          type: ['museum']
-        }, callback);
-      }
+      //   infowindow = new google.maps.InfoWindow();
+      //   var service = new google.maps.places.PlacesService(map);
+      //   service.nearbySearch({
+      //     location: pyrmont,
+      //     radius: 500,
+      //     type: ['museum']
+      //   }, callback);
+      // }
+      var request = {
+          location: new google.maps.LatLng(38.88758809999999, -77.02294410000002),
+          radius: '500',
+          types: ['museum']
+      };
+
+
+      var container = document.getElementById('results');
+
+      var service = new google.maps.places.PlacesService(container);
+      service.nearbySearch(request, callback);
 
       function callback(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+              for (var i = 0; i < results.length; i++) {
+                console.log(results[i]);
+                  container.innerHTML += results[i].geometry.location + '<br />' ;
+                  var infowindow = new google.maps.InfoWindow({
+                    content: "I'm here now"
+
+                  });
+                  var coords = results[i].geometry.location;
+                  marker = new google.maps.Marker({
+                    position: coords,
+                    map: map,
+                    clickable: true,
+                    title : 'Hello'
+                  });
+                  // google.maps.event.addListener(marker, 'click', function() {
+                  //   infowindow.setContent('<div><strong>' + results.name + '</strong><br>' +
+                  //     results.formatted_address + '</div>');
+                  //     infowindow.open(map, this);
+                  // });
+                  marker.addListener(marker, 'click', function(e) {
+                
+                 });
+
+              }
+
+
+              // for (var i = 0; i < results.length;; i++) {
+              //   var coords = results[i].geometry.coordinates;
+              //   var latLng = new google.maps.LatLng(coords[1],coords[0]);
+              //   var marker = new google.maps.Marker({
+              //     position: latLng,
+              //     map: map
+              //   });
+              // }
+
           }
-        }
       }
 
-      function createMarker(place) {
-        var placeLoc = place.geometry.location;
-        console.log(place.geometry.location.lat());
-        console.log(place.geometry.location.lng());
+      // function callback(results, status) {
+      //   if (status === google.maps.places.PlacesServiceStatus.OK) {
+      //     for (var i = 0; i < results.length; i++) {
+      //       createMarker(results[i]);
+      //       console.log(results[i]);
+      //     }
+      //     // var spots = results.slice();
+      //
+      //   }
+      // }
+
+        //
+        //
+        // google.maps.event.addListener(marker, 'click', function() {
+        //   infowindow.setContent(place.name);
+        //   infowindow.open(map, this);
+        // });
 
 
 
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
+     //
+     // var cafeMarker = new google.maps.Marker({
+     //     position: {lat: 38.8881608, lng: -77.02296819999998},
+     //     map: map,
+     //     icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00',
+     //     title: 'Cafe'
+     // });
 
-
-
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-        });
-      }
+      panorama = map.getStreetView();
+      panorama.setPosition(pyrmont);
+      panorama.setVisible(true);
+      panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+        heading: 265,
+        pitch: 0
+      }));
+    }
     </script>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoQWp-xhp4iJKQkSOS-fQbJGJz02xYTTU&libraries=places&callback=initMap" async defer></script>
   </body>
