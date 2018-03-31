@@ -1,165 +1,210 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <!--STYLES--->
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <!--BODY------>
-  <body>
-    <div id="map"></div>
-    <script>
-      var map;
-      var infowindow;
-      function initMap() {
-        var pyrmont =  {lat: 38.88758809999999, lng: -77.02294410000002};
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
-        });
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-          location: pyrmont,
-          radius: 500,
-          type: ['museum']
-        }, callback);
-      }
-      function callback(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
-        }
-      }
-      function createMarker(place) {
-        var placeLoc = place.geometry.location;
-        console.log(place.geometry.location.lat());
-        console.log(place.geometry.location.lng());
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-        });
-      }
-    </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoQWp-xhp4iJKQkSOS-fQbJGJz02xYTTU&libraries=places&callback=initMap" async defer></script>
-  </body>
-</html>
-=======
-<html>
     <head>
-        <style>
-            .landmark {
-                height: 50px;
-                width: 50px;
-                border-radius: 25px;
-                position: absolute;
-                background-color: green;
-            }
-        </style>
-
-    </head>
+        <title>Simple Map</title>
+        <meta name="viewport" content="initial-scale=1.0">
+            <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <style>
+                        body {
+                            font-family: "Lato", sans-serif;
+                        }
+                    
+                    .sidenav {
+                        height: 30%;
+                        width: 0;
+                        position: fixed;
+                        z-index: 100;
+                        top: 0;
+                        left: 0;
+                        color: #f1f1f1;
+                        background-color: #111;
+                        overflow-x: hidden;
+ 
+ transition: 0.5s;
+                        padding-top: 60px;
+                        text-align:center;
+                    }
+                    
+                    .sidenav a {
+                        padding: 8px 8px 8px 32px;
+                        text-decoration: none;
+                        font-size: 25px;
+                        color: #818181;
+                        display: block;
+                        transition: 0.3s;
+                        
+                    }
+                    
+                    .sidenav a:hover{
+                        color: #f1f1f1;
+                    }
+                    
+                    .sidenav .closebtn {
+                        position: absolute;
+                        top: 0;
+                        right: 25px;
+                        font-size: 36px;
+                        margin-left: 50px;
+                    }
+                    
+                    @media screen and (max-height: 450px) {
+                        .sidenav {padding-top: 15px;}
+                        .sidenav a {font-size: 18px;}
+                    }
+    /* Always set the map height explicitly to define the size of the div
+                     * element that contains the map. */
+                #map {
+                    height: 100%;
+                }
+                /* Optional: Makes the sample page fill the window. */
+                html, body {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+                </style>
+                
+                </head>
+    
+    <!--BODY------>
     <body>
-        <p id="out">Compass Orientation: not detected yet</p>
-        <p id="compass_heading">Compass Heading: not detected yet</p>
-    <script>
-        var degtorad = Math.PI / 180; // Degree-to-Radian conversion
-        var compass_heading = 0;
-        var landmarks = [];
-
-        var landmark = document.createElement("div");
-        landmark.classList.add("landmark");
-        document.body.appendChild(landmark);
-
-        var quad = {'lat':38.92228350000001, 'long':-77.01806210000001, 'html_element':landmark};
-        var mapbox = {'lat':38.8997503, 'long':-77.03383489999999};
-        var you = mapbox;
-        landmarks.push(quad);
-
-        if(window.DeviceOrientationEvent){
-            window.addEventListener("deviceorientation", orientation, false);
-        }else{
-            console.log("DeviceOrientationEvent is not supported");
-        }
-
-        function orientation(event){
-            console.log("Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma);
-            var out = document.getElementById("out");
-            out.innerHTML = "Magnetometer: " + event.alpha + ", " + event.beta + ", " + event.gamma;
-            document.getElementById("compass_heading").innerHTML = "Compass Heading: " + compassHeading(event.alpha, event.gamma, event.beta);
-            compass_heading = compassHeading(event.alpha, event.gamma, event.beta);
-            landmarks.forEach(function(landmark){
-                landmark.html_element.style.right = screen.width * getRatio(you, landmark, compass_heading) + 'px';
-            });
-        }
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <div>Washington Monument</div>
+            <div>The Washington Monument is an obelisk on the National Mall in Washington, D.C., built to commemorate George Washington, once commander-in-chief of the Continental Army and the first President of the United States.</div>
+            <p id="paragraph"></p>
+            
+        </div>
         
-        function compassHeading( alpha, beta, gamma ) {
-            
-            var _x = beta  ? beta  * degtorad : 0; // beta value
-            var _y = gamma ? gamma * degtorad : 0; // gamma value
-            var _z = alpha ? alpha * degtorad : 0; // alpha value
-            
-            var cX = Math.cos( _x );
-            var cY = Math.cos( _y );
-            var cZ = Math.cos( _z );
-            var sX = Math.sin( _x );
-            var sY = Math.sin( _y );
-            var sZ = Math.sin( _z );
-            
-            // Calculate Vx and Vy components
-            var Vx = - cZ * sY - sZ * sX * cY;
-            var Vy = - sZ * sY + cZ * sX * cY;
-            
-            // Calculate compass heading
-            var compassHeading = Math.atan( Vx / Vy );
-            
-            // Convert compass heading to use whole unit circle
-            if( Vy < 0 ) {
-                compassHeading += Math.PI;
-            } else if( Vx < 0 ) {
-                compassHeading += 2 * Math.PI;
+        <br><br><br><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+        
+        <script>
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "100%";
             }
-            
-            compass_heading = compassHeading;
-            return compassHeading; //in radians :) * ( 180 / Math.PI ); // Compass Heading (in degrees)
-        }
-
-
-        function getRatio(you, landmark, compass_heading){
-            you.x = you.long;
-            you.y = you.lat;
-            landmark.x = landmark.long;
-            landmark.y = landmark.lat;
-            var x = you.x - landmark.x;
-            var y = you.y - landmark.y;
-            var r = Math.sqrt(x*x+y*y);
-            var t = Math.atan(y/x);
-            var dt = compass_heading - Math.atan(y/x);
-            var b = r * Math.cos(t);
-            var a = r * Math.sin(t);
-            var ratio = (b / Math.sqrt(3) - a) / (2*b/Math.sqrt(3));
-            return ratio;
+        
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
         }
         </script>
+
+        <div id="map"></div>
+        <h3>Results:</h3>
+        <div id="results"></div>
+        <script>
+            
+            var map;
+            var panorama;
+            var marker;
+            
+            function initMap() {
+                var pyrmont = {lat: 38.88758809999999, lng: -77.02294410000002};
+                
+                map = new google.maps.Map(document.getElementById('map'), {
+                                          center: pyrmont,
+                                          zoom: 15,
+                                          streetViewControl: true
+                                          });
+                                          
+                                          //   infowindow = new google.maps.InfoWindow();
+                                          //   var service = new google.maps.places.PlacesService(map);
+                                          //   service.nearbySearch({
+                                          //     location: pyrmont,
+                                          //     radius: 500,
+                                          //     type: ['museum']
+                                          //   }, callback);
+                                          // }
+                                          var request = {
+                                              location: new google.maps.LatLng(38.88758809999999, -77.02294410000002),
+                                              radius: '500',
+                                              types: ['museum']
+                                          };
+                                          
+                                          
+                                          var container = document.getElementById('results');
+                                          
+                                          var service = new google.maps.places.PlacesService(container);
+                                          service.nearbySearch(request, callback);
+                                          
+                                          function callback(results, status) {
+                                              if (status == google.maps.places.PlacesServiceStatus.OK) {
+                                                  for (var i = 0; i < results.length; i++) {
+                                                      console.log(results[i]);
+                                                      container.innerHTML += results[i].geometry.location + '<br />' ;
+                                                      var infowindow = new google.maps.InfoWindow({
+                                                                                                  content: "I'm here now"
+                                                                                                  
+                                                                                                  });
+                                                                                                  var coords = results[i].geometry.location;
+                                                                                                  marker = new google.maps.Marker({
+                                                                                                                                  position: coords,
+                                                                                                                                  map: map,
+                                                                                                                                  clickable: true,
+                                                                                                                                  title : 'Hello'
+                                                                                                                                  });
+                                                                                                                                  // google.maps.event.addListener(marker, 'click', function() {
+                                                                                                                                  //   infowindow.setContent('<div><strong>' + results.name + '</strong><br>' +
+                                                                                                                                  //     results.formatted_address + '</div>');
+                                                                                                                                  //     infowindow.open(map, this);
+                                                                                                                                  // });
+                                                                                                                                  marker.addListener(marker, 'click', function(e) {
+                                                                                                                                                     
+                                                                                                                                                     showData(marker.title);
+                                                                                                                                                     });
+                                                                                                                                                     
+                                                  }
+                                                  
+                                                  
+                                                  // for (var i = 0; i < results.length;; i++) {
+                                                  //   var coords = results[i].geometry.coordinates;
+                                                  //   var latLng = new google.maps.LatLng(coords[1],coords[0]);
+                                                  //   var marker = new google.maps.Marker({
+                                                  //     position: latLng,
+                                                  //     map: map
+                                                  //   });
+                                                  // }
+                                                  
+                                              }
+                                          }
+                                          
+                                          // function callback(results, status) {
+                                          //   if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                          //     for (var i = 0; i < results.length; i++) {
+                                          //       createMarker(results[i]);
+                                          //       console.log(results[i]);
+                                          //     }
+                                          //     // var spots = results.slice();
+                                          //
+                                          //   }
+                                          // }
+                                          
+                                          //
+                                          //
+                                          // google.maps.event.addListener(marker, 'click', function() {
+                                          //   infowindow.setContent(place.name);
+                                          //   infowindow.open(map, this);
+                                          // });
+                                          
+                                          
+                                          
+                                          //
+                                          // var cafeMarker = new google.maps.Marker({
+                                          //     position: {lat: 38.8881608, lng: -77.02296819999998},
+                                          //     map: map,
+                                          //     icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00',
+                                          //     title: 'Cafe'
+                                          // });
+                                          
+                                          panorama = map.getStreetView();
+                                          panorama.setPosition(pyrmont);
+                                          panorama.setVisible(true);
+                                          panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+                                                                                                   heading: 265,
+                                                                                                   pitch: 0
+                                                                                                   }));
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoQWp-xhp4iJKQkSOS-fQbJGJz02xYTTU&libraries=places&callback=initMap" async defer></script>
     </body>
 </html>
->>>>>>> origin/master
