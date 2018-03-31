@@ -15,5 +15,5 @@ Tourista is a web app that uses your phone’s GPS to pinpoint your location, sh
 
 Product Specification:
 ________________
-The application uses JavaScript, Google Maps API, Google Street API and Wikipedia API to develop the web app. Vanilla Javascript and hosted on Bitballoon.
+The application uses HTML, CSS, JavaScript, Google Maps API, Google Street View API and Wikipedia API to develop the web app. We also used Vanilla Javascript and hosted on Bitballoon.
 We used Google Maps API to fetch local destination and get a panoramic view, Vanilla JS to detect user location and orientation, Wikipedia API to fetch data about locations.
